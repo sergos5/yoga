@@ -91,22 +91,27 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Modal
 
-    let more = document.querySelector('.more'),
-        moreTab = document.querySelectorAll('.description-btn'),
+    let more = document.querySelectorAll('.more, .description-btn'),
         overlay = document.querySelector('.overlay'),
         close = document.querySelector('.popup-close');
 
-    more.addEventListener('click', function() {
-        overlay.style.display = 'block';
-        this.classList.add('more-splash');
-        document.body.style.overflow = 'hidden';
+    more.forEach(function(item) {
+        item.addEventListener('click', function() {
+            overlay.style.display = 'block';
+            this.classList.add('more-splash');
+            document.body.style.overflow = 'hidden';
+        });
     });
+    
     close.addEventListener('click', function () {
         overlay.style.display = 'none';
-        more.classList.remove('more-splash');
-        document.body.style.overflow = '';
-    
+        document.body.style.overflow = '';   
+        more.forEach(function(item) {
+            item.classList.remove('more-splash');
+        });
     });
 
 
+
+    
 });

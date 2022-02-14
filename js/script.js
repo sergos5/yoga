@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', () => {
 
     'use strict';
 
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Timer 
 
-    let deadline ='2022-01-24T00:00:00';
+    let deadline ='2022-02-14T03:00:00';
 
     function getTimeRemaining (endtime) {
         let t = Date.parse(endtime) - Date.parse(new Date()),
@@ -95,7 +95,7 @@ window.addEventListener('DOMContentLoaded', function() {
         overlay = document.querySelector('.overlay'),
         close = document.querySelector('.popup-close');
 
-    more.forEach(function(item) {
+    more.forEach(item => {
         item.addEventListener('click', function() {
             overlay.style.display = 'block';
             this.classList.add('more-splash');
@@ -103,15 +103,70 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    close.addEventListener('click', function () {
+    close.addEventListener('click', () =>{
         overlay.style.display = 'none';
         document.body.style.overflow = '';   
         more.forEach(function(item) {
             item.classList.remove('more-splash');
         });
+        //statusMessage.innerHTML = ''; //Убирает сообщение "Мы скоро с Вами свяжемся!"
     });
 
+    // sending forms
 
+    let message = {
+        loading: "Идет загрузка...",
+        success: "Мы скоро с Вами свяжемся!",
+        failure: "Упс! Что-то пошло не так!..."
+    };
+
+    let forms = document.querySelectorAll('.main-form, #form'),
+        input = document.getElementsByTagName('input'),
+        statusMessage = document.createElement('div');
+
+    statusMessage.classList.add('status');
+
+    forms.forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+    
+            let request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    
+            let formData = new FormData(form);
+    
+            let obj = {};
+            formData.forEach(function(value,key) {
+                obj[key] = value;
+            });
+    
+            let json = JSON.stringify(obj);
+    
+            request.send(json);
+    
+            request.addEventListener('readystatechange', function () {
+                if (request.readyState < 4) {
+                    statusMessage.innerHTML = message.loading;
+                } else if (request.readyState === 4 && request.status ==200) {
+                    statusMessage.innerHTML = message.success;
+                } else {
+                    statusMessage.innerHTML = message.failure;
+                }
+            });
+    
+            for (let i=0; i<input.length; i++) {
+                input[i].value = '';            
+            }
+            
+            // убираем statusMessag через 5 сек
+            setTimeout (() => statusMessage.innerHTML = '', 5000);
+                
+        });
+    });
+
+    // Slider
 
     
 });

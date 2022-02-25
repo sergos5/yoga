@@ -216,5 +216,47 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // calc
+
+    let persons = document.querySelectorAll('.counter-block-input')[0],
+        restDays = document.querySelectorAll('.counter-block-input')[1],
+        place = document.getElementById('select'),
+        totalValue = document.getElementById('total'),
+        personsSum = 0,
+        daysSum = 0,
+        coef = 1,
+        total = 0;    
+
+    totalValue.innerHTML = 0;
+
+    let showTotalSum = function () {
+        if (restDays.value=='' || persons.value=='' || restDays.value=='0' || persons.value=='0') {
+            totalValue.innerHTML = 0;
+        } else {
+            total=(personsSum+daysSum)*4000*coef;
+            totalValue.innerHTML = total;
+        }
+    };
+
+    persons.addEventListener('change', function() {
+        personsSum = +this.value;    
+        showTotalSum();
+    });
+
+    restDays.addEventListener('change', function() {
+        daysSum = +this.value;
+        showTotalSum();
+    });
+
+    place.addEventListener('change', function() {
+        coef = this.options[this.selectedIndex].value;
+        showTotalSum(); 
+    });
+
+
 
 });
+
+
+	
+
